@@ -1,0 +1,9 @@
+{
+  "name": "BIZ ARENA (BA)",
+  "description": "Alibaba-style social commerce marketplace. Short-video storefronts with deep e-commerce integration and AI content creation.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
