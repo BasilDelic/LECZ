@@ -3,7 +3,6 @@ import { GoogleGenAI, Type } from "@google/genai";
 
 /**
  * AI Fraud Detection Service
- * Analyzes transaction details against user behavior to flag suspicious Arena Wallet activity.
  */
 export const auditArenaTransaction = async (
   userId: string,
@@ -62,7 +61,6 @@ export const negotiateBulkPrice = async (
     1. If quantity is > 100, you can drop price up to 15%.
     2. If quantity is > 500, you can drop price up to 25%.
     3. Be professional, firm but encouraging. 
-    4. If offer is too low, counter-offer with a price halfway between original and their offer, OR suggest they buy more units to get that price.
     
     Return a JSON response with:
     - "decision": "ACCEPTED" | "COUNTER" | "REJECTED"
@@ -78,6 +76,39 @@ export const negotiateBulkPrice = async (
           message: { type: Type.STRING }
         },
         required: ["decision", "counterPrice", "message"]
+      }
+    }
+  });
+  return JSON.parse(response.text);
+};
+
+export const negotiateShipping = async (
+  productName: string,
+  totalWeightEstimate: string,
+  destination: string,
+  proposedPrice: number,
+  history: any[]
+) => {
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const response = await ai.models.generateContent({
+    model: 'gemini-3-flash-preview',
+    contents: `Negotiate shipping for ${productName} going to ${destination}.
+    Estimated logistics: ${totalWeightEstimate}.
+    Proposed shipping cost: $${proposedPrice}.
+    History: ${JSON.stringify(history)}
+    
+    You are a Logistics AI Assistant. Help mediate a fair price between the merchant and buyer.
+    Provide a professional response suggesting if the price is fair based on international B2B standards or if it's too high/low.`,
+    config: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: Type.OBJECT,
+        properties: {
+          feedback: { type: Type.STRING, description: "Professional advice on the shipping price" },
+          isFair: { type: Type.BOOLEAN },
+          suggestedPriceRange: { type: Type.STRING }
+        },
+        required: ["feedback", "isFair", "suggestedPriceRange"]
       }
     }
   });

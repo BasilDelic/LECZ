@@ -8,6 +8,16 @@ export enum UserRole {
   CONSUMER = 'CONSUMER'
 }
 
+export enum OrderStatus {
+  INQUIRY = 'INQUIRY',
+  SHIPPING_DISCUSSION = 'SHIPPING_DISCUSSION',
+  SHIPPING_PROPOSED = 'SHIPPING_PROPOSED',
+  AWAITING_PAYMENT = 'AWAITING_PAYMENT',
+  PAID = 'PAID',
+  SHIPPED = 'SHIPPED',
+  COMPLETED = 'COMPLETED'
+}
+
 export interface WalletLedgerEntry {
   id: string;
   type: 'CREDIT' | 'DEBIT';
@@ -38,11 +48,24 @@ export interface User {
   walletBalance: number;
   ledger: WalletLedgerEntry[];
   isVerified: boolean;
-  isEmailVerified: boolean; // Tracking email verification
-  isProfileComplete: boolean; // Tracking if the user has completed their profile
+  isEmailVerified: boolean;
+  isProfileComplete: boolean;
   backedPitches?: string[];
   followingIds: string[];
   followersCount: number;
+}
+
+export interface Order {
+  id: string;
+  productId: string;
+  buyerId: string;
+  sellerId: string;
+  productPrice: number;
+  shippingCost?: number;
+  quantity: number;
+  status: OrderStatus;
+  variant?: string;
+  timestamp: string;
 }
 
 export interface PitchDeck {

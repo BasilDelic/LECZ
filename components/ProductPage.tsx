@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Product } from '../types';
-import { X, Star, ShieldCheck, Truck, ChevronRight, MessageSquare, ShoppingCart, Check, Package, Info, Rocket, Percent, Scale } from 'lucide-react';
+import { X, Star, ShieldCheck, Truck, ChevronRight, MessageSquare, ShoppingCart, Check, Package, Info, Rocket, Percent, Scale, MessageCircle } from 'lucide-react';
 import { MOCK_REVIEWS } from '../constants';
 import CheckoutModal from './CheckoutModal';
 import ArenaNegotiator from './ArenaNegotiator';
@@ -29,29 +29,31 @@ const ProductPage: React.FC<ProductPageProps> = ({ product, onClose }) => {
   const handleFinalizeNegotiation = (price: number, qty: number) => {
     setNegotiatedDeal({ price, qty });
     setShowNegotiator(false);
-    setShowCheckout(true);
+    // Instead of direct checkout, prompt shipping discussion for bulk
+    alert("ORDER INITIATED: Please proceed to the messages tab to discuss shipping logistics with the seller.");
+    onClose(); 
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black animate-in slide-in-from-bottom duration-500 overflow-y-auto pb-32 no-scrollbar">
+    <div className="fixed inset-0 z-[100] bg-white dark:bg-black animate-in slide-in-from-bottom duration-500 overflow-y-auto pb-32 no-scrollbar">
       {/* Top Banner */}
-      <div className="relative aspect-square w-full bg-zinc-900 group">
+      <div className="relative aspect-square w-full bg-zinc-100 dark:bg-zinc-900 group">
         <img src={product.image} className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-1000" alt={product.name} />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-40"></div>
         <button 
           onClick={onClose} 
-          className="absolute top-6 right-6 p-3 bg-black/60 backdrop-blur-xl rounded-full border border-white/10 text-white hover:bg-black/80 transition-colors"
+          className="absolute top-6 right-6 p-3 bg-black/60 backdrop-blur-xl rounded-full border border-white/10 text-white hover:bg-black/80 transition-colors z-20"
         >
           <X size={20} />
         </button>
       </div>
 
-      <div className="px-6 -mt-10 relative z-10 space-y-8">
+      <div className="px-6 -mt-10 relative z-10 space-y-8 max-w-2xl mx-auto">
         {/* Header - Dynamic Price Section */}
-        <div className="bg-zinc-900/40 backdrop-blur-3xl p-6 rounded-[2.5rem] border border-white/5 space-y-4 shadow-2xl">
+        <div className="bg-white/80 dark:bg-zinc-900/40 backdrop-blur-3xl p-6 rounded-[2.5rem] border border-zinc-100 dark:border-white/5 space-y-4 shadow-2xl transition-colors">
           <div className="flex justify-between items-start">
             <div className="space-y-1">
-              <h1 className="text-2xl font-black tracking-tight leading-tight">{product.name}</h1>
+              <h1 className="text-2xl font-black tracking-tight leading-tight text-black dark:text-white">{product.name}</h1>
               <div className="flex items-center space-x-3 text-sm">
                 <div className="flex text-sky-500">
                   {[...Array(5)].map((_, i) => (
@@ -90,8 +92,8 @@ const ProductPage: React.FC<ProductPageProps> = ({ product, onClose }) => {
                   onClick={() => setSelectedVariant(v)}
                   className={`px-5 py-2.5 rounded-2xl text-xs font-black transition-all border ${
                     selectedVariant === v 
-                    ? 'bg-white text-black border-white scale-105 shadow-lg' 
-                    : 'bg-zinc-800/50 text-zinc-400 border-zinc-700 hover:border-zinc-500'
+                    ? 'bg-black dark:bg-white text-white dark:text-black border-transparent scale-105 shadow-lg' 
+                    : 'bg-zinc-100 dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700 hover:border-zinc-500'
                   }`}
                 >
                   {v}
@@ -101,22 +103,22 @@ const ProductPage: React.FC<ProductPageProps> = ({ product, onClose }) => {
           </div>
         </div>
 
-        {/* B2B Negotiation Promo */}
-        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-[2rem] flex flex-col gap-4 shadow-xl">
+        {/* B2B Negotiation & Shipping Discussion Promo */}
+        <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 p-6 rounded-[2rem] flex flex-col gap-4 shadow-xl">
            <div className="flex items-center gap-3">
-              <div className="p-3 bg-white/5 rounded-2xl border border-white/10">
-                 <Scale className="text-sky-500" size={20} />
+              <div className="p-3 bg-sky-500/10 rounded-2xl border border-sky-500/20">
+                 <Truck className="text-sky-500" size={20} />
               </div>
               <div>
-                 <h4 className="text-sm font-black uppercase tracking-widest">Bulk Negotiation</h4>
-                 <p className="text-[10px] text-zinc-500 font-bold leading-tight">Buying for your business? Start a real-time price haggle with our AI sales agent.</p>
+                 <h4 className="text-sm font-black uppercase tracking-widest text-black dark:text-white">Shipping Discussion</h4>
+                 <p className="text-[10px] text-zinc-500 font-bold leading-tight">For bulk orders, discuss freight & custom duties directly with the manufacturer.</p>
               </div>
            </div>
            <button 
              onClick={() => setShowNegotiator(true)}
-             className="w-full py-4 bg-zinc-800 border border-zinc-700 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-zinc-300 hover:bg-zinc-700 transition-colors"
+             className="w-full py-4 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-black dark:text-zinc-300 hover:bg-sky-500 hover:text-white transition-all shadow-md"
            >
-              NEGOTIATE BULK PRICE
+              NEGOTIATE BULK & FREIGHT
            </button>
         </div>
 
@@ -125,33 +127,33 @@ const ProductPage: React.FC<ProductPageProps> = ({ product, onClose }) => {
           <ShieldCheck size={20} className="text-green-500 shrink-0" />
           <div className="space-y-1">
             <h5 className="text-[11px] font-black text-green-500 uppercase">BA Verified Transaction</h5>
-            <p className="text-[10px] text-zinc-400 leading-tight">Funds held in escrow. Payout to seller only after your delivery confirmation.</p>
+            <p className="text-[10px] text-zinc-500 dark:text-zinc-400 leading-tight">Funds held in escrow. Shipping fees are added only after mutual agreement in chat.</p>
           </div>
         </div>
 
         {/* Description */}
         <div className="space-y-3 px-2">
           <h3 className="font-black text-sm uppercase tracking-wider text-zinc-400">Specifications</h3>
-          <p className="text-sm text-zinc-400 leading-relaxed font-medium">{product.description}</p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed font-medium">{product.description}</p>
         </div>
       </div>
 
       {/* Floating Action Bar */}
       <div className="fixed bottom-4 left-4 right-4 flex gap-3 z-[110] max-w-md mx-auto">
-        <button className="w-14 h-14 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center justify-center text-zinc-400">
-          <MessageSquare size={24} />
+        <button className="w-14 h-14 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl flex items-center justify-center text-zinc-500 shadow-xl">
+          <MessageCircle size={24} />
         </button>
         <button 
-          onClick={() => !isOutOfStock && setShowCheckout(true)} 
+          onClick={() => setShowNegotiator(true)} 
           disabled={isOutOfStock}
           className={`flex-1 rounded-2xl font-black text-sm flex items-center justify-center gap-3 shadow-2xl transition-all active:scale-95 ${
             isOutOfStock 
-            ? 'bg-zinc-800 text-zinc-500' 
+            ? 'bg-zinc-200 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 cursor-not-allowed' 
             : 'bg-sky-500 text-white shadow-sky-500/40'
           }`}
         >
           <ShoppingCart size={20} />
-          {negotiatedDeal ? `BUY ${negotiatedDeal.qty} UNITS` : 'BUY NOW'}
+          {negotiatedDeal ? `DISCUSS ${negotiatedDeal.qty} UNITS` : 'INQUIRE & QUOTE'}
         </button>
       </div>
 

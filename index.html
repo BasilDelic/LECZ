@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>BIZ ARENA (BA) - Social Commerce</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -37,6 +37,10 @@
       overflow: hidden;
       margin: 0;
       padding: 0;
+      background-color: #f4f4f5; /* zinc-100 fallback */
+    }
+    #root {
+      height: 100%;
     }
     .snap-y {
       scroll-snap-type: y mandatory;
@@ -76,6 +80,29 @@
     .light .custom-scrollbar::-webkit-scrollbar-thumb {
       background: #ddd;
     }
+    
+    /* Support for Notch/Safe Areas */
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .pt-safe {
+      padding-top: env(safe-area-inset-top);
+    }
+    
+    /* Max width container for desktop responsiveness */
+    .app-container {
+      max-width: 500px;
+      margin: 0 auto;
+      height: 100vh;
+      position: relative;
+      background: white;
+      box-shadow: 0 0 50px rgba(0,0,0,0.1);
+    }
+    @media (max-width: 500px) {
+      .app-container {
+        max-width: 100%;
+      }
+    }
   </style>
 <script type="importmap">
 {
@@ -90,7 +117,7 @@
 }
 </script>
 </head>
-<body>
+<body class="bg-zinc-100 dark:bg-zinc-950">
   <div id="root"></div>
 </body>
 </html>
